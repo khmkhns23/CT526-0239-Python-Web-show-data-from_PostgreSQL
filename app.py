@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify , render_template
-from models import db, Student, Movie
+from models import db, Movie
 import config
 
 app = Flask(__name__)
@@ -13,17 +13,6 @@ db.init_app(app)
 # -----------------------------
 with app.app_context():
     db.create_all()
-
-
-
-@app.route('/')
-def home():
-    return render_template("index.html")
-
-@app.route('/movies')
-def movie_list():
-    movies = Movie.query.all()
-    return render_template("movies.html", movies=movies, title="Movie List")
 
 # -----------------------------
 # CREATE
@@ -40,6 +29,17 @@ def create_movie():
     db.session.add(movie)
     db.session.commit()
     return jsonify({"message": "Movie created", "mid": movie.mid}), 201
+
+
+@app.route('/')
+def home():
+    return render_template("index.html")
+
+@app.route('/movies')
+def movie_list():
+    movies = Movie.query.all()
+    return render_template("movies.html", movies=movies, title="Movie List")
+
 
 @app.route('/jsonmovies', methods=['GET'])
 def get_movies():
